@@ -1,0 +1,4 @@
+html:not([data-delay-start]) [data-image-delay],
+[data-image-delay-wait] {
+    background-image: none!important;
+}

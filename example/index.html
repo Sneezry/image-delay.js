@@ -1,0 +1,37 @@
+<!doctype html>
+<html data-delay-timeout="60">
+<head>
+<link rel="stylesheet" href="../image-delay.css">
+<style>
+img {
+    display: block;
+    width: 200px;
+}
+
+div {
+    background-size: cover;
+    width: 200px;
+    height: 150px;
+}
+
+div.wait {
+    transition: opacity 2s;
+    -moz-transition: opacity 2s;
+    -webkit-transition: opacity 2s;
+    -o-transition: opacity 2s;
+}
+
+[data-image-delay-wait] {
+    opacity: 0;
+}
+</style>
+<script src="../image-delay.js"></script>
+</head>
+<body>
+<img src="google1.jpg">
+<img data-delay-src="google2.jpg">
+<div style="background-image: url(google3.jpg);" data-image-delay></div>
+<div style="background-image: url(google4.jpg);" data-image-delay-wait="20"></div>
+<div class="wait" style="background-image: url(google5.jpg);" data-image-delay-wait="20"></div>
+</body>
+</html>
