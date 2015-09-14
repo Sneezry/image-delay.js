@@ -12,7 +12,7 @@ var isDelayStart = false;
 
 var timeout = document.getElementsByTagName('html')[0].getAttribute('data-delay-timeout');
 
-timeout = isNaN(timeout) ? 10 : Number(timeout);
+timeout = (!timeout || isNaN(timeout)) ? 10 : Number(timeout);
 
 var getBgImageUrl = function(element) {
     var bgImageRawCss = element.style.backgroundImage,
