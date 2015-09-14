@@ -34,3 +34,7 @@ div {
     opacity: 0;
 }
 ```
+
+## Live Demo
+
+<http://sneezry.github.io/image-delay.js/example/>
