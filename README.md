@@ -14,6 +14,10 @@ Load images delay.
 
 * Set a timeout value with `data-image-delay-wait` if you like, for example, `<div data-image-delay-wait='5'></div>` means delay background image will be show after 5 seconds if the images is still not loaded. If you'd like show them as soon as possible, you may use `data-image-delay`.
 
+## Work With Retina Display
+
+Generally, designers may draw different images for retina display and none-retina display. For background image, you may use `-webkit-image-set` to set different background images for retina display and none-retina display. For example, `background-image: -webkit-image-set(url(none-retina.png) 1px, url(retina.png) 2px)`. image-delay.js can handle this automatically with `data-image-delay-wait` elements. For `img` element, you may also set `data-delay-setsrc` to figure out which image we should use. `data-delay-setsrc` has the same form of value with `setsrc`, for example, `data-delay-setsrc='retina.png 2x'`.
+
 ## Add CSS3 Transition
 
 You can also add CSS3 transition to make it looks better. For example, you may add code below in your style sheet:
