@@ -68,11 +68,15 @@ var delayStart = function() {
         isDelayStart = true;
     }
 
-    var num, len, src, img = document.getElementsByTagName('img'), allElements = document.all;
+    var num, len, src, setsrc, img = document.getElementsByTagName('img'), allElements = document.all;
 
     for (num = 0, len = img.length; num < len; num++) {
         if (src = img[num].getAttribute('data-delay-src')) {
             img[num].src = src;
+        }
+
+        if (setsrc = img[num].getAttribute('data-delay-setsrc')) {
+            img[num].setsrc = setsrc;
         }
     }
 
