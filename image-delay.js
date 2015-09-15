@@ -44,21 +44,107 @@ var getBgImageUrl = function(element) {
     return bgImageURL ? bgImageURL[1] : null;
 };
 
-var listenBgLoaded = function(element) {
+var listenBgLoaded = function(element, callback) {
     var isLoaded = false,
         timeout = element.getAttribute('data-image-delay-wait'),
         src = getBgImageUrl(element),
         img = document.createElement('img');
 
-    timeout = isNaN(timeout) ? 5 : Number(timeout);
+    timeout = (!timeout || isNaN(timeout)) ? 5 : Number(timeout);
     img.src = src;
     img.onload = function() {
-        element.removeAttribute('data-image-delay-wait');
+        if (!isLoaded) {
+            isLoaded = true;
+            element.removeAttribute('data-image-delay-wait');
+            callback();
+        }
     };
 
     setTimeout(function() {
-        element.removeAttribute('data-image-delay-wait');
+        if (!isLoaded) {
+            isLoaded = true;
+            element.removeAttribute('data-image-delay-wait');
+            callback();
+        }
     }, timeout * 1000);
+};
+
+var listenLoaded = function(element, callback) {
+    if (element.getAttribute('data-delay-src') || element.getAttribute('data-delay-setsrc')) {
+        var setsrc, src, isLoaded = false,
+            timeout = element.getAttribute('data-image-delay-wait');
+
+        timeout = (!timeout || isNaN(timeout)) ? 5 : Number(timeout);
+
+        if (setsrc = element.getAttribute('data-delay-setsrc')) {
+            element.setsrc = setsrc;
+        }
+
+        if (src = element.getAttribute('data-delay-src')) {
+            element.src = src;
+        }
+
+        element.onload = function() {
+            if (!isLoaded) {
+                isLoaded = true;
+                element.removeAttribute('data-image-delay-wait');
+                callback();
+            }
+        };
+
+        setTimeout(function() {
+            if (!isLoaded) {
+                isLoaded = true;
+                element.removeAttribute('data-image-delay-wait');
+                callback();
+            }
+        }, timeout * 1000);
+    } else {
+        listenBgLoaded(element, callback);
+    }
+};
+
+var sortDelayList = function(list) {
+    var i, currentIndex, group = [], newList = [];
+
+    list.sort(function(a, b) {
+        return a.getAttribute('data-delay-index') - b.getAttribute('data-delay-index');
+    });
+
+    currentIndex = list[0].getAttribute('data-delay-index');
+
+    for (i = 0; i < list.length; i++) {
+        if (currentIndex !== list[i].getAttribute('data-delay-index')) {
+            newList.push(group);
+            group = [];
+            currentIndex = list[i].getAttribute('data-delay-index');
+        }
+
+        group.push(list[i]);
+    }
+
+    newList.push(group);
+
+    return newList;
+};
+
+var loadQueue = function(sortList, index) {
+    index = index || 0;
+
+    if (index >= sortList.length) {
+        return;
+    }
+
+    var i, loadedLen = 0;
+    for (i = 0; i < sortList[index].length; i++) {
+        sortList[index][i].removeAttribute('data-delay-index');
+        listenLoaded(sortList[index][i], function() {
+            loadedLen++;
+            if (loadedLen === sortList[index].length) {
+                loadQueue(sortList, index + 1);
+            }
+        });
+    }
 };
 
 var delayStart = function() {
@@ -68,25 +154,32 @@ var delayStart = function() {
         isDelayStart = true;
     }
 
-    var num, len, src, setsrc, img = document.getElementsByTagName('img'), allElements = document.all;
-
-    for (num = 0, len = img.length; num < len; num++) {
-        if (setsrc = img[num].getAttribute('data-delay-setsrc')) {
-            img[num].setsrc = setsrc;
-        }
-
-        if (src = img[num].getAttribute('data-delay-src')) {
-            img[num].src = src;
-        }
-    }
+    var num, len, src, setsrc, sortList = [], indexList = [], allElements = document.all;
 
     document.getElementsByTagName('html')[0].setAttribute('data-delay-start', 'true');
 
     for (num = 0, len = allElements.length; num < len; num++) {
-        if (allElements[num].getAttribute('data-image-delay-wait')) {
-            listenBgLoaded(allElements[num]);
+        if (allElements[num].getAttribute('data-image-delay') !== null ||
+            allElements[num].getAttribute('data-delay-src') &&
+            (!allElements[num].getAttribute('data-delay-index') ||
+            isNaN(allElements[num].getAttribute('data-delay-index')))) {
+
+            sortList.push(allElements[num]);
+            // listenBgLoaded(allElements[num]);
+        } else if (allElements[num].getAttribute('data-delay-index') &&
+            !isNaN(allElements[num].getAttribute('data-delay-index'))) {
+
+            indexList.push(allElements[num]);
         }
     }
+
+    if (sortList.length > 0) {
+        sortList = [sortList].concat(sortDelayList(indexList));
+    } else {
+        sortList = sortDelayList(indexList);
+    }
+
+    loadQueue(sortList);
 };
 
 window.onload = function() {

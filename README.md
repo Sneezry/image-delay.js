@@ -1,18 +1,30 @@
 ## image-delay.js
 
-Load images delay.
+Delay loading images.
 
 ## How To Use
 
-* Use `data-delay-src` instead of `src` in `img` tag you'd like to load delay.
+* Use `data-delay-src` instead of `src` in `img` tag you'd like to delay loading.
 
-* Add `data-image-delay` attribute in any element you'd like to load background image delay.
+* Add `data-image-delay` attribute in any element you'd like to delay loading background image.
 
 * Add `data-image-delay-wait` attribute in any element you'd like to load background image and show it when it's ready.
 
-* Set a timeout option in `html` tag with `data-delay-timeout` attribute, for example, `<html data-delay-timeout='10'>` means delay image will be load after 10 seconds if your page is still not loaded. Default value is 10 seconds.
+* Set a timeout option in `html` tag with `data-delay-timeout` attribute, for example, `<html data-delay-timeout='10'>` means delay image will be load after 10 seconds even if your page is still not loaded. Default value is 10 seconds.
 
-* Set a timeout value with `data-image-delay-wait` if you like, for example, `<div data-image-delay-wait='5'></div>` means delay background image will be show after 5 seconds if the images is still not loaded. If you'd like show them as soon as possible, you may use `data-image-delay`.
+* Set a timeout value with `data-image-delay-wait` if you like, for example, `<div data-image-delay-wait='5'></div>` means delay background image will be show after 5 seconds if the images is still not loaded. If you'd like to show them as soon as possible, you may use `data-image-delay`.
+
+## Load Images Order By Index
+
+You can also load images order by index, add `data-delay-index` in any tag you'd like to load by index. Tags without index will be loaded first, tags with small index will be loaded before those with large index. Here is an exmaple below.
+
+```
+<div style='background: url(cat.png)' data-image-delay data-delay-index='2'></div>
+<img data-delay-src='dog.png' data-delay-index='1'>
+<img data-delay-src='bird.png'>
+```
+
+The bird will be loaded first, then the dog, and the cat is the last.
 
 ## Work With Retina Display
 
@@ -20,7 +32,7 @@ Generally, designers may draw different images for retina display and none-retin
 
 ## Add CSS3 Transition
 
-You can also add CSS3 transition to make it looks better. For example, you may add code below in your style sheet:
+You can also add CSS3 transition to make it look better. For example, you may add code below in your style sheet:
 
 ```
 div {
