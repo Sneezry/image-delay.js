@@ -41,10 +41,6 @@ div {
     -webkit-transition: opacity 2s;
     -o-transition: opacity 2s;
 }
-
-[data-image-delay-wait] {
-    opacity: 0;
-}
 ```
 
 ## Live Demo
