@@ -189,6 +189,10 @@ var delayStart = function() {
 };
 
 var showDelaySrc = function() {
+    if (!document.getElementsByTagName('html')[0].getAttribute('data-delay-start')) {
+        return;
+    }
+    
     var num, setsrc, src, allElements = document.all;
 
     for (num = 0; num < allElements.length; num++) {
