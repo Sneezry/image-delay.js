@@ -1,5 +1,8 @@
 html:not([data-delay-start]) [data-image-delay],
-[data-image-delay-wait],
 [data-delay-index] {
     background-image: none!important;
+}
+
+[data-image-delay-wait] {
+    display: none!important;
 }

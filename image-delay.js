@@ -15,7 +15,7 @@ var timeout = document.getElementsByTagName('html')[0].getAttribute('data-delay-
 timeout = (!timeout || isNaN(timeout)) ? 10 : Number(timeout);
 
 var getBgImageUrl = function(element) {
-    var bgImageRawCss = element.style.backgroundImage,
+    var bgImageRawCss = getComputedStyle(element, null).getPropertyValue('background-image'),
         bgImageRawCssURL = bgImageRawCss.match(/^\s*\-webkit\-image\-set\((.*?)\)\s*$/),
         i, bgImageURL, dpr = 1;
 
@@ -45,12 +45,15 @@ var getBgImageUrl = function(element) {
 };
 
 var listenBgLoaded = function(element, callback) {
-    var isLoaded = false,
+    var src, isLoaded = false,
         timeout = element.getAttribute('data-image-delay-wait'),
-        src = getBgImageUrl(element),
         img = document.createElement('img');
 
     timeout = (!timeout || isNaN(timeout)) ? 5 : Number(timeout);
+
+    element.removeAttribute('data-delay-index');
+    src = getBgImageUrl(element);
+
     img.src = src;
     img.onload = function() {
         if (!isLoaded) {
@@ -159,8 +162,8 @@ var delayStart = function() {
     document.getElementsByTagName('html')[0].setAttribute('data-delay-start', 'true');
 
     for (num = 0, len = allElements.length; num < len; num++) {
-        if (allElements[num].getAttribute('data-image-delay') !== null ||
-            allElements[num].getAttribute('data-delay-src') &&
+        if ((allElements[num].getAttribute('data-image-delay') !== null ||
+            allElements[num].getAttribute('data-delay-src')) &&
             (!allElements[num].getAttribute('data-delay-index') ||
             isNaN(allElements[num].getAttribute('data-delay-index')))) {
 
