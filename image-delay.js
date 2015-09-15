@@ -135,6 +135,7 @@ var loadQueue = function(sortList, index) {
     index = index || 0;
 
     if (index >= sortList.length) {
+        document.getElementsByTagName('html')[0].setAttribute('data-delay-end', 'true');
         return;
     }
 
@@ -186,6 +187,22 @@ var delayStart = function() {
         loadQueue(sortList);
     }
 };
+
+var showDelaySrc = function() {
+    var num, setsrc, src, allElements = document.all;
+
+    for (num = 0; num < allElements.length; num++) {
+        if (setsrc = allElements[num].getAttribute('data-delay-setsrc')) {
+            allElements[num].setsrc = setsrc;
+        }
+
+        if (src = allElements[num].getAttribute('data-delay-src')) {
+            allElements[num].src = src;
+        }
+    }
+};
+
+window.showDelaySrc = showDelaySrc;
 
 window.onload = function() {
     setTimeout(delayStart, 0);
