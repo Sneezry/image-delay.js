@@ -173,13 +173,15 @@ var delayStart = function() {
         }
     }
 
-    if (sortList.length > 0) {
+    if (sortList.length > 0 && indexList.length > 0) {
         sortList = [sortList].concat(sortDelayList(indexList));
-    } else {
+    } else if (indexList.length > 0) {
         sortList = sortDelayList(indexList);
     }
 
-    loadQueue(sortList);
+    if (sortList.length > 0) {
+        loadQueue(sortList);
+    }
 };
 
 window.onload = function() {
