@@ -20,10 +20,6 @@ div.wait {
     -webkit-transition: opacity 2s;
     -o-transition: opacity 2s;
 }
-
-[data-image-delay-wait] {
-    opacity: 0;
-}
 </style>
 <script src="../image-delay.js"></script>
 </head>
@@ -31,7 +27,9 @@ div.wait {
 <img src="google1.jpg">
 <img data-delay-src="google2.jpg" data-delay-index="2">
 <div style="background-image: url(google3.jpg);" data-image-delay></div>
-<div style="background-image: url(google4.jpg);" data-image-delay-wait="20" data-delay-index="3"></div>
+<div data-delay-index="3">
+    <div style="background-image: url(google4.jpg);" data-image-delay-wait="20"></div>
+</div>
 <div class="wait" style="background-image: url(google5.jpg);" data-image-delay-wait="20" data-delay-index="1"></div>
 </body>
 </html>

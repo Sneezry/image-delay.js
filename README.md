@@ -14,9 +14,11 @@ Delay loading images.
 
 * Set a timeout value with `data-image-delay-wait` if you like, for example, `<div data-image-delay-wait='5'></div>` means delay background image will be show after 5 seconds if the images is still not loaded. If you'd like to show them as soon as possible, you may use `data-image-delay`.
 
+* If the delay image is loaded failed, `data-image-delay-error` attribute will be set.
+
 ## Load Images Order By Index
 
-You can also load images order by index, add `data-delay-index` in any tag you'd like to load by index. Tags without index will be loaded first, tags with small index will be loaded before those with large index. Here is an exmaple below.
+You can also load images order by index, add `data-delay-index` in any tag you'd like to load by index. Tags without index will be loaded first, tags with small index will be loaded before those with large index. Image delay elements will inherit parent delay index. Here is an exmaple below.
 
 ```
 <div style='background: url(cat.png)' data-image-delay data-delay-index='2'></div>
@@ -43,6 +45,20 @@ div {
 }
 ```
 
+## Work With AngularJS
+
+AngularJS apps use `ng-src` instead of `src` in `img` tags, and `data-delay-src` doesn't support ng expressions. To work with AngularJS, you need include ng-image-delay.js in your project, and inject `ng-image-delay` module to your app.
+
+```
+var app = angular.module('myApp', ['ng-image-delay']);
+```
+
+Then, use `ng-delay-src` instead of `ng-src`.
+
 ## Live Demo
 
 <http://sneezry.github.io/image-delay.js/example/>
+
+## License
+
+MIT License.
