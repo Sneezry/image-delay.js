@@ -2,6 +2,21 @@
 
 Delay loading images.
 
+## CDN Source Files
+
+Add `image-delay.css` and `image-delay.min.js` in your pages.
+
+```
+<link rel="stylesheet" href="//cdn.jsdelivr.net/image-delay.js/latest/image-delay.css">
+<script src="//cdn.jsdelivr.net/image-delay.js/latest/image-delay.min.js"></script>
+```
+
+To work with AngularJS apps, you also need add `ng-image-delay.js` in your pages.
+
+```
+<script src="//cdn.jsdelivr.net/image-delay.js/latest/ng-image-delay.js"></script>
+```
+
 ## How To Use
 
 * Use `data-delay-src` instead of `src` in `img` tag you'd like to delay loading.
