@@ -9,15 +9,4 @@ angular.module('ng-image-delay', [])
         });
       }
     };
-  })
-  .directive('ngDelaySetsrc', function() {
-    return {
-      restrict: 'A',
-      priority: 99,
-      link: function(scope, element, attr) {
-        attr.$observe('ngDelaySetsrc', function(value) {
-          attr.$set('data-delay-setsrc', value);
-        });
-      }
-    };
   });
