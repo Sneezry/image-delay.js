@@ -8,7 +8,7 @@
 (function(window, undefined) {
 'use strict';
 
-var isDelayStart = false;
+var isDelayStart = false, startCount = 0;
 
 var timeout = document.getElementsByTagName('html')[0].getAttribute('data-delay-timeout');
 
@@ -152,15 +152,22 @@ var loadQueue = function(sortList, index) {
 };
 
 var delayStart = function() {
+    var num, len, src, setsrc, sortList = [], indexList = [], allElements = document.all;
+
+    document.getElementsByTagName('html')[0].setAttribute('data-delay-start', 'true');
+    for (num = 0, len = allElements.length; num < len; num++) {
+        if (allElements[num].getAttribute('ng-delay-src') && !allElements[num].getAttribute('data-delay-src') && startCount < 10) {
+            setTimeout(delayStart, 500);
+            startCount++;
+            return;
+        }
+    }
+
     if (isDelayStart) {
         return;
     } else {
         isDelayStart = true;
     }
-
-    var num, len, src, setsrc, sortList = [], indexList = [], allElements = document.all;
-
-    document.getElementsByTagName('html')[0].setAttribute('data-delay-start', 'true');
 
     for (num = 0, len = allElements.length; num < len; num++) {
         if ((allElements[num].getAttribute('data-image-delay') !== null ||
@@ -179,6 +186,8 @@ var delayStart = function() {
 
     if (sortList.length > 0 && indexList.length > 0) {
         sortList = [sortList].concat(sortDelayList(indexList));
+    } else if (sortList.length > 0) {
+        sortList = [sortList];
     } else if (indexList.length > 0) {
         sortList = sortDelayList(indexList);
     }
