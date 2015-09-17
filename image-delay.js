@@ -12,6 +12,8 @@ var isDelayStart = false, startCount = 0;
 
 var timeout = document.getElementsByTagName('html')[0].getAttribute('data-delay-timeout');
 
+var batch = document.getElementsByTagName('html')[0].getAttribute('data-delay-batch');
+
 timeout = (!timeout || isNaN(timeout)) ? 10 : Number(timeout);
 
 var getBgImageUrl = function(element) {
@@ -155,6 +157,8 @@ var loadQueue = function(sortList, index) {
     if (index >= sortList.length) {
         document.getElementsByTagName('html')[0].setAttribute('data-delay-end', 'true');
         document.getElementsByTagName('html')[0].removeAttribute('data-delay-batch');
+        isDelayStart = false;
+        startCount = 0;
         return;
     }
 
@@ -172,8 +176,7 @@ var loadQueue = function(sortList, index) {
 };
 
 var delayStart = function() {
-    var num, len, src, setsrc, batchUnitNum = 0, batchUnit = [], sortList = [], indexList = [], allElements = document.all,
-        batch = document.getElementsByTagName('html')[0].getAttribute('data-delay-batch');
+    var num, len, src, setsrc, batchUnitNum = 0, batchUnit = [], sortList = [], indexList = [], allElements = document.all;
 
     document.getElementsByTagName('html')[0].setAttribute('data-delay-start', 'true');
 
@@ -273,21 +276,12 @@ var delayStart = function() {
     }
 };
 
-var showDelaySrc = function() {
-    if (!document.getElementsByTagName('html')[0].getAttribute('data-delay-start')) {
-        return;
-    }
-    
-    var num, setsrc, src, allElements = document.all;
+var delayInit = function() {
+    document.getElementsByTagName('html')[0].removeAttribute('data-delay-start');
+    document.getElementsByTagName('html')[0].removeAttribute('data-delay-end');
 
-    for (num = 0; num < allElements.length; num++) {
-        if (setsrc = allElements[num].getAttribute('data-delay-setsrc')) {
-            allElements[num].setsrc = setsrc;
-        }
-
-        if (src = allElements[num].getAttribute('data-delay-src')) {
-            allElements[num].src = src;
-        }
+    if (batch) {
+        document.getElementsByTagName('html')[0].setAttribute('data-delay-batch', batch);
     }
 };
 
@@ -299,7 +293,7 @@ if (document.getElementsByTagName('html')[0].getAttribute('data-delay-passive') 
     setTimeout(delayStart, timeout * 1000);
 }
 
-window.showDelaySrc = showDelaySrc;
 window.imageDelayStart = delayStart;
+window.imageDelayInit = delayInit;
 
 })(window);
