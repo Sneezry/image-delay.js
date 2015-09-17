@@ -291,7 +291,7 @@ var showDelaySrc = function() {
     }
 };
 
-if (document.getElementsByTagName('html')[0].getAttribute('data-delay-passive') === 'null') {
+if (document.getElementsByTagName('html')[0].getAttribute('data-delay-passive') === null) {
     window.onload = function() {
         setTimeout(delayStart, 0);
     };
