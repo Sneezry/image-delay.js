@@ -154,12 +154,14 @@ var loadQueue = function(sortList, index) {
 
     if (index >= sortList.length) {
         document.getElementsByTagName('html')[0].setAttribute('data-delay-end', 'true');
+        document.getElementsByTagName('html')[0].removeAttribute('data-delay-batch');
         return;
     }
 
     var i, loadedLen = 0;
     for (i = 0; i < sortList[index].length; i++) {
         sortList[index][i].removeAttribute('data-delay-index');
+        sortList[index][i].setAttribute('data-delay-start', 'true');
         listenLoaded(sortList[index][i], function() {
             loadedLen++;
             if (loadedLen === sortList[index].length) {
@@ -170,7 +172,8 @@ var loadQueue = function(sortList, index) {
 };
 
 var delayStart = function() {
-    var num, len, src, setsrc, sortList = [], indexList = [], allElements = document.all;
+    var num, len, src, setsrc, batchUnitNum = 0, batchUnit = [], sortList = [], indexList = [], allElements = document.all,
+        batch = document.getElementsByTagName('html')[0].getAttribute('data-delay-batch');
 
     document.getElementsByTagName('html')[0].setAttribute('data-delay-start', 'true');
 
@@ -188,60 +191,81 @@ var delayStart = function() {
         isDelayStart = true;
     }
 
-    for (num = 0, len = allElements.length; num < len; num++) {
-        if ((allElements[num].getAttribute('data-delay-src') || 
-            allElements[num].getAttribute('data-delay-setsrc') || 
-            allElements[num].getAttribute('data-image-delay') !== null ||
-            allElements[num].getAttribute('data-image-delay-wait') !== null) &&
-            !allElements[num].getAttribute('data-delay-index')) {
-            var index, parent = allElements[num].parentNode;
-
-            while(parent && parent.getAttribute) {
-                if (index = parent.getAttribute('data-delay-index')) {
-                    allElements[num].setAttribute('data-delay-index', index);
-                    break;
+    if (batch && !isNaN(batch) && Number(batch) > 0) {
+        batch = Number(batch);
+        for (num = 0, len = allElements.length; num < len; num++) {
+            if (allElements[num].getAttribute('data-delay-src') || 
+                allElements[num].getAttribute('data-delay-setsrc') || 
+                allElements[num].getAttribute('data-image-delay') !== null ||
+                allElements[num].getAttribute('data-image-delay-wait') !== null) {
+                batchUnit.push(allElements[num]);
+                batchUnitNum++;
+                if (batchUnitNum % batch === 0) {
+                    sortList.push(batchUnit);
+                    batchUnit = [];
+                    batchUnitNum = 0;
                 }
-
-                parent = parent.parentNode;
             }
         }
-    }
-
-    for (num = 0, len = allElements.length; num < len; num++) {
-        if (allElements[num].getAttribute('data-delay-src') === null &&
-            allElements[num].getAttribute('data-delay-setsrc') === null &&
-            allElements[num].getAttribute('data-image-delay') === null &&
-            allElements[num].getAttribute('data-image-delay-wait') === null &&
-            allElements[num].getAttribute('data-delay-index')) {
-            
-            allElements[num].removeAttribute('data-delay-index');
+        if (batchUnit.length > 0) {
+            sortList.push(batchUnit);
         }
-    }
+    } else {
+        for (num = 0, len = allElements.length; num < len; num++) {
+            if ((allElements[num].getAttribute('data-delay-src') || 
+                allElements[num].getAttribute('data-delay-setsrc') || 
+                allElements[num].getAttribute('data-image-delay') !== null ||
+                allElements[num].getAttribute('data-image-delay-wait') !== null) &&
+                !allElements[num].getAttribute('data-delay-index')) {
+                var index, parent = allElements[num].parentNode;
 
-    for (num = 0, len = allElements.length; num < len; num++) {
-        if ((allElements[num].getAttribute('data-image-delay') !== null ||
-            allElements[num].getAttribute('data-delay-src')) &&
-            (!allElements[num].getAttribute('data-delay-index') ||
-            isNaN(allElements[num].getAttribute('data-delay-index')))) {
+                while(parent && parent.getAttribute) {
+                    if (index = parent.getAttribute('data-delay-index')) {
+                        allElements[num].setAttribute('data-delay-index', index);
+                        break;
+                    }
 
-            sortList.push(allElements[num]);
-        } else if (allElements[num].getAttribute('data-delay-index') &&
-            !isNaN(allElements[num].getAttribute('data-delay-index')) &&
-            (allElements[num].getAttribute('data-image-delay') !== null ||
-            allElements[num].getAttribute('data-image-delay-wait') !== null ||
-            allElements[num].getAttribute('data-delay-src') ||
-            allElements[num].getAttribute('data-delay-setsrc'))) {
-
-            indexList.push(allElements[num]);
+                    parent = parent.parentNode;
+                }
+            }
         }
-    }
 
-    if (sortList.length > 0 && indexList.length > 0) {
-        sortList = [sortList].concat(sortDelayList(indexList));
-    } else if (sortList.length > 0) {
-        sortList = [sortList];
-    } else if (indexList.length > 0) {
-        sortList = sortDelayList(indexList);
+        for (num = 0, len = allElements.length; num < len; num++) {
+            if (allElements[num].getAttribute('data-delay-src') === null &&
+                allElements[num].getAttribute('data-delay-setsrc') === null &&
+                allElements[num].getAttribute('data-image-delay') === null &&
+                allElements[num].getAttribute('data-image-delay-wait') === null &&
+                allElements[num].getAttribute('data-delay-index')) {
+                
+                allElements[num].removeAttribute('data-delay-index');
+            }
+        }
+
+        for (num = 0, len = allElements.length; num < len; num++) {
+            if ((allElements[num].getAttribute('data-image-delay') !== null ||
+                allElements[num].getAttribute('data-delay-src')) &&
+                (!allElements[num].getAttribute('data-delay-index') ||
+                isNaN(allElements[num].getAttribute('data-delay-index')))) {
+
+                sortList.push(allElements[num]);
+            } else if (allElements[num].getAttribute('data-delay-index') &&
+                !isNaN(allElements[num].getAttribute('data-delay-index')) &&
+                (allElements[num].getAttribute('data-image-delay') !== null ||
+                allElements[num].getAttribute('data-image-delay-wait') !== null ||
+                allElements[num].getAttribute('data-delay-src') ||
+                allElements[num].getAttribute('data-delay-setsrc'))) {
+
+                indexList.push(allElements[num]);
+            }
+        }
+
+        if (sortList.length > 0 && indexList.length > 0) {
+            sortList = [sortList].concat(sortDelayList(indexList));
+        } else if (sortList.length > 0) {
+            sortList = [sortList];
+        } else if (indexList.length > 0) {
+            sortList = sortDelayList(indexList);
+        }
     }
 
     if (sortList.length > 0) {
@@ -267,12 +291,15 @@ var showDelaySrc = function() {
     }
 };
 
+if (document.getElementsByTagName('html')[0].getAttribute('data-delay-passive') === 'null') {
+    window.onload = function() {
+        setTimeout(delayStart, 0);
+    };
+
+    setTimeout(delayStart, timeout * 1000);
+}
+
 window.showDelaySrc = showDelaySrc;
-
-window.onload = function() {
-    setTimeout(delayStart, 0);
-};
-
-setTimeout(delayStart, timeout * 1000);
+window.imageDelayStart = delayStart;
 
 })(window);
