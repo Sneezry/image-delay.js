@@ -5,8 +5,13 @@ angular.module('ng-image-delay', [])
       priority: 99,
       link: function(scope, element, attr) {
         attr.$observe('ngDelaySrc', function(value) {
-          attr.$set('data-delay-src', value);
+          if (/MSIE 8/.test(navigator.userAgent)) {
+            attr.$set('src', value);
+            element.prop('src', value);
+          } else {
+            attr.$set('data-delay-src', value);
+          }
         });
       }
     };
-  });
+});
