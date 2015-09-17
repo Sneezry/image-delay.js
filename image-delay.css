@@ -1,7 +1,8 @@
 html:not([data-delay-start]) [data-image-delay],
 html:not([data-delay-end]) [data-delay-index],
-[data-delay-index] [data-image-delay],
-[data-delay-index] [data-image-delay-wait] {
+html[data-delay-batch] [data-image-delay]:not([data-delay-start]),
+html[data-delay-batch] [data-image-delay-wait]:not([data-delay-start]),
+html[data-delay-batch] [data-image-index]:not([data-delay-start]) {
     background-image: none!important;
 }
 

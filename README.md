@@ -2,6 +2,21 @@
 
 Delay loading images.
 
+## CDN Source Files
+
+Add `image-delay.css` and `image-delay.min.js` in your pages.
+
+```
+<link rel="stylesheet" href="//cdn.jsdelivr.net/image-delay.js/latest/image-delay.css">
+<script src="//cdn.jsdelivr.net/image-delay.js/latest/image-delay.min.js"></script>
+```
+
+To work with AngularJS apps, you also need add `ng-image-delay.js` in your pages.
+
+```
+<script src="//cdn.jsdelivr.net/image-delay.js/latest/ng-image-delay.js"></script>
+```
+
 ## How To Use
 
 * Use `data-delay-src` instead of `src` in `img` tag you'd like to delay loading.
@@ -54,6 +69,10 @@ var app = angular.module('myApp', ['ng-image-delay']);
 ```
 
 Then, use `ng-delay-src` instead of `ng-src`.
+
+## Passive Mode
+
+image-delay.js can run automatically after `window.onload` event is called, however, in some cases, it is not a good opportunity. For example, if your page is an AngularJS app, and the app has an `ng-view` of which content can be modified by the router, then doms in `ng-view` may be not loaded when `window.onload` event is called. You can handle this progress, and make image-delay.js know when your page is ready to start loading delay images. To make passive mode effective, add `data-delay-passive` in `html` tag, and call `imageDelayStart()` whenever you think all things are ready.
 
 ## Live Demo
 
