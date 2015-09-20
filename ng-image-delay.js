@@ -13,6 +13,9 @@ angular.module('ng-image-delay', [])
             attr.$set('data-delay-src', value);
           }
         });
+        element.bind('error', function() {
+            attr.$set('data-delay-error', 'true');
+        });
       }
     };
 });
