@@ -45,7 +45,7 @@ The bird will be loaded first, then the dog, and the cat is the last.
 
 ## Work With Retina Display
 
-Generally, designers may draw different images for retina display and none-retina display. For background image, you may use `-webkit-image-set` to set different background images for retina display and none-retina display. For example, `background-image: -webkit-image-set(url(none-retina.png) 1px, url(retina.png) 2px)`. image-delay.js can handle this automatically with `data-image-delay-wait` elements. For `img` element, you may also set `data-delay-setsrc` to figure out which image we should use. `data-delay-setsrc` has the same form of value with `setsrc`, for example, `data-delay-setsrc='retina.png 2x'`.
+Generally, designers may draw different images for retina display and none-retina display. For background image, you may use `-webkit-image-set` to set different background images for retina display and none-retina display. For example, `background-image: -webkit-image-set(url(none-retina.png) 1x, url(retina.png) 2x)`. image-delay.js can handle this automatically with `data-image-delay-wait` elements. For `img` element, you may also set `data-delay-setsrc` to figure out which image we should use. `data-delay-setsrc` has the same form of value with `setsrc`, for example, `data-delay-setsrc='retina.png 2x'`.
 
 ## Add CSS3 Transition
 
