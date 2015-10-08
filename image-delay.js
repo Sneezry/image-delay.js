@@ -127,28 +127,20 @@ var listenLoaded = function(element, callback) {
     }
 };
 
-var sortDelayList = function(list) {
-    var i, currentIndex, group = [], newList = [];
-
-    list.sort(function(a, b) {
-        return a.getAttribute('data-delay-index') - b.getAttribute('data-delay-index');
+var groupNSortDelayList = function(list) {
+    var groups = {};
+    list.forEach( function(o)
+    {
+        var group = o.getAttribute('data-delay-index');
+        groups[group] = groups[group] || [];
+        groups[group].push(o);
     });
-
-    currentIndex = list[0].getAttribute('data-delay-index');
-
-    for (i = 0; i < list.length; i++) {
-        if (currentIndex !== list[i].getAttribute('data-delay-index')) {
-            newList.push(group);
-            group = [];
-            currentIndex = list[i].getAttribute('data-delay-index');
-        }
-
-        group.push(list[i]);
-    }
-
-    newList.push(group);
-
-    return newList;
+    
+    return Object.keys(groups).sort(function (a, b) {
+        return a - b;
+    }).map( function( group ) {
+        return groups[group];
+    });
 };
 
 var loadQueue = function(sortList, index) {
@@ -263,11 +255,11 @@ var delayStart = function() {
         }
 
         if (sortList.length > 0 && indexList.length > 0) {
-            sortList = [sortList].concat(sortDelayList(indexList));
+            sortList = [sortList].concat(groupNSortDelayList(indexList));
         } else if (sortList.length > 0) {
             sortList = [sortList];
         } else if (indexList.length > 0) {
-            sortList = sortDelayList(indexList);
+            sortList = groupNSortDelayList(indexList);
         }
     }
 
